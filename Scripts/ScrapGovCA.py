@@ -35,7 +35,7 @@ def downloadFileUrl(urlPath, filename):
 # Accesing  site
 # ----------------------
 # defining the url
-path = 'C:\\Users\\bruce.DESKTOP-U0NC12D\\Documents\\Python'
+path = 'C:\\Users\\bruce.DESKTOP-U0NC12D\\OneDrive\\Projects\\LMIA\\lmia-repo\\Files' #your destiantion path
 url = "https://open.canada.ca/data/en/dataset/90fed587-1364-4f33-a9ee-208181dc0b97"
 
 # ----conf headers
@@ -55,7 +55,9 @@ html = extractSoup(response.text)
 # ===========================
 # Scraping the site
 # ===========================
+#parameters
 listlinks = []
+i = 0  # Start the numerator
 
 # Get the links and structure to generate the dowload list
 for link in get_soup(url).find_all('a', class_='btn btn-primary btn-sm resource-url-analytics'):
@@ -63,8 +65,6 @@ for link in get_soup(url).find_all('a', class_='btn btn-primary btn-sm resource-
     listlinks.append(file_link)
 
 
-# Start the numerator
-i = 0
 # Downloading the files
 for item in listlinks:
 
@@ -72,14 +72,14 @@ for item in listlinks:
     file = os.path.basename(parse.path)
     num = str(file).rfind('.')
     fileNameCsv = ''.join([file[0:num] , '_' , str(i),file[num:num+5]])
-
+    fullfilename = os.path.join(path, fileNameCsv)
     i = i + 1
-    print(str(fileNameCsv))
-    #Conditional top remofe french files and download the files
+    print(str(fullfilename))
+    #Conditional top remove french files and download the files
     if '_fr' in(str(file)) or '_FR' in(str(file)) :
          print('french')
     else:
          try:
-            downloadFileUrl(item, fileNameCsv.rstrip())
+            downloadFileUrl(item, fullfilename.rstrip())
          except Exception:
              print('Error')
